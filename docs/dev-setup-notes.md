@@ -87,7 +87,7 @@ git init
 git add .
 git commit -m "init: dev environment setup"
 # 推送到私有仓库备份
-git remote add origin git@github.com:yourname/dotfiles.git
+git remote add origin git@github.com:DinoStray/dotfiles.git
 git push -u origin main
 ```
 
