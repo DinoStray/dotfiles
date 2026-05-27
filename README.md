@@ -30,6 +30,7 @@ source ~/.zshrc
 | `fetch.prune=true` | fetch 时自动清理已删除的远程分支 |
 | `rebase.autoStash=true` | rebase 前自动 stash 本地改动 |
 | `init.defaultBranch=main` | 默认分支名为 main |
+| `npm config yes=true` | npx 自动确认安装包，不等待交互 |
 | `PAGER=cat` | 全局禁用 pager（写入 ~/.zshrc） |
 | `GIT_PAGER=cat` | git 专用 pager 环境变量 |
-
+| `npm_config_yes=true` | npx 自动确认（环境变量，写入 ~/.zshrc） |

@@ -50,6 +50,35 @@ git config --global --list | grep pager
 
 ---
 
+### ⚠️ npx 卡住等待确认安装包（AI/脚本场景）
+
+**现象**：执行 `npx <package>` 时，npx 需要下载未安装的包，弹出 "Need to install the following packages: ... Ok to proceed? (y)" 提示，在非交互式终端中无法输入 y，命令永远挂起。
+
+**根因**：npx 默认在需要下载包时请求用户交互确认，管道或 AI 执行环境无法提供交互输入。
+
+**解决方案**：
+
+```zsh
+# 方式一：npm 全局配置（推荐，一次设置永久生效）
+npm config set yes true
+
+# 方式二：环境变量（写入 ~/.zshrc）
+export npm_config_yes=true
+
+# 方式三：单次命令加 --yes 标志
+npx --yes @tanstack/router-cli generate
+```
+
+**验证配置**：
+```zsh
+npm config get yes
+# 应输出: true
+```
+
+**注意**：设置 `yes=true` 后，npx 会自动下载并执行任何请求的包，无需确认。在安全环境（开发机）中无问题，但在不可信环境中请谨慎。
+
+---
+
 ## 最佳实践总结
 
 ### Git 命令
@@ -61,10 +90,19 @@ git config --global --list | grep pager
 | 查看分支 | `git --no-pager branch -v` |
 | 配置了全局 cat | 直接用，无需 `--no-pager` |
 
+### npm/npx 命令
+
+| 场景 | 推荐写法 |
+|------|---------|
+| 已配置 yes=true | 直接用 `npx <pkg>` |
+| 未配置全局 yes | `npx --yes <pkg>` |
+| 脚本中使用 | 开头加 `export npm_config_yes=true` |
+
 ### Shell 脚本 / AI 辅助开发
 
 - 任何可能触发 pager 的命令，末尾加 `| cat`
 - 或在脚本开头 `export PAGER=cat`
+- npx 调用始终加 `--yes` 或确保环境已设 `npm_config_yes=true`
 - `man` 命令：`man git | cat` 或 `MANPAGER=cat man git`
 
 ---
@@ -79,19 +117,6 @@ git config --global --list | grep pager
     └── dev-setup-notes.md  # 本文件
 ```
 
-### 建议：纳入 Git 版本管理
-
-```zsh
-cd ~/.dotfiles
-git init
-git add .
-git commit -m "init: dev environment setup"
-# 推送到私有仓库备份
-git remote add origin git@github.com:DinoStray/dotfiles.git
-git push -u origin main
-```
-
 ---
 
-*最后更新：2026-05-16*
-
+*最后更新：2026-05-27*
